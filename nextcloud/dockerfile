@@ -1,0 +1,2 @@
+ARG NC_VERSION
+FROM nextcloud:${NC_VERSION}

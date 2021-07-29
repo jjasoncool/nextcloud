@@ -1,62 +1,56 @@
 version: "3.9"
 
 services:
-    haproxy:
+    nextcloud:
         build:
-            context: "./haproxy/"
+            context: "./nextcloud/"
             args:
-                HA_VERSION: ${HA_VERSION}
+                NC_VERSION: ${NC_VERSION}
         environment:
             - TZ=Asia/Taipei
+            - MYSQL_HOST=mariadb
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASS}
+            - MYSQL_DATABASE=${DB_DATABASE}
         depends_on:
-            - nginx
+            - mariadb
         links:
-            - nginx
+            - mariadb
         ports:
-            - "80:80"
-            - "443:443"
+            - "${NC_PORT}:80"
         volumes:
-            - haproxy-config:/usr/local/etc/haproxy/
-            - ${CERT_PATH}:/etc/haproxy/certs/
-            - ${CERT_PATH}/challenge:/usr/share/nginx/html/
-        container_name: "${HA_NAME}"
+            - nc-data:/var/www/html
+        container_name: "${NC_NAME}"
         restart: always
 
-    nginx:
-        build:
-            context: "./nginx/"
-            args:
-                NGINX_VERSION: ${NGINX_VERSION}
+    mariadb:
+        image: mariadb:${DB_VERSION}
+        restart: always
+        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
         environment:
             - TZ=Asia/Taipei
-            - NGINX_PORT=${NGINX_PORT}
-        expose:
-            - "58588"
+            - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+            - MYSQL_USER=${DB_USER}
+            - MYSQL_PASSWORD=${DB_PASS}
+            - MYSQL_DATABASE=${DB_DATABASE}
         volumes:
-            - nginx-config:/etc/nginx/templates/
-            - ${CERT_PATH}:/etc/haproxy/certs/
-            - ${CERT_PATH}/challenge:/usr/share/nginx/html/
-        container_name: "${NGINX_NAME}"
+            - db-config:/var/lib/mysql
+        container_name: "${DB_NAME}"
         restart: always
 
 volumes:
-    haproxy-config:
+    db-config:
         driver: local
         driver_opts:
             type: "none"
             o: "bind"
-            device: "./config/haproxy/"
+            device: "./config/mariadb/"
         external: false
 
-    nginx-config:
+    nc-data:
         driver: local
         driver_opts:
             type: "none"
             o: "bind"
-            device: "./config/nginx/"
+            device: "${NC_DATAPATH}"
         external: false
-
-networks:
-    default:
-        external:
-            name: ${NET_WORK}
