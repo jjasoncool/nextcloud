@@ -12,8 +12,11 @@ services:
             - MYSQL_USER=${DB_USER}
             - MYSQL_PASSWORD=${DB_PASS}
             - MYSQL_DATABASE=${DB_DATABASE}
+            - REDIS_HOST=redis
+            - REDIS_HOST_PASSWORD=${RD_PASS}
         depends_on:
             - mariadb
+            - redis
         links:
             - mariadb
         ports:
@@ -25,7 +28,6 @@ services:
 
     mariadb:
         image: mariadb:${DB_VERSION}
-        restart: always
         command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
         environment:
             - TZ=Asia/Taipei
@@ -33,18 +35,30 @@ services:
             - MYSQL_USER=${DB_USER}
             - MYSQL_PASSWORD=${DB_PASS}
             - MYSQL_DATABASE=${DB_DATABASE}
+        ports:
+            - "${DB_PORT}"
         volumes:
-            - db-config:/var/lib/mysql
+            - db-data:/var/lib/mysql
         container_name: "${DB_NAME}"
         restart: always
 
+    redis:
+        image: redis:${RD_VERSION}
+        container_name: "${RD_NAME}"
+        command: "redis-server --requirepass ${RD_PASS}"
+        deploy:
+            resources:
+                limits:
+                    memory: 200M
+        restart: always
+
 volumes:
-    db-config:
+    db-data:
         driver: local
         driver_opts:
             type: "none"
             o: "bind"
-            device: "./config/mariadb/"
+            device: "${DB_DATAPATH}"
         external: false
 
     nc-data:
