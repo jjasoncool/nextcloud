@@ -14,6 +14,7 @@ services:
             - MYSQL_DATABASE=${DB_DATABASE}
             - REDIS_HOST=redis
             - REDIS_HOST_PASSWORD=${RD_PASS}
+            - NEXTCLOUD_TRUSTED_DOMAINS=${NC_TRUST_DOMAINS}
         depends_on:
             - mariadb
             - redis
