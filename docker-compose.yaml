@@ -29,7 +29,7 @@ services:
 
     mariadb:
         image: mariadb:${DB_VERSION}
-        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-read-only-compressed=OFF
         environment:
             - TZ=Asia/Taipei
             - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
