@@ -15,18 +15,35 @@ services:
       - REDIS_HOST=redis
       - REDIS_HOST_PASSWORD=${RD_PASS}
       - NEXTCLOUD_TRUSTED_DOMAINS=${NC_TRUST_DOMAINS}
-      - TRUSTED_PROXIES=${REVERSE_PROXY_IP}
-      - OVERWRITEPROTOCOL=${PROTOCOL}
     depends_on:
       - mariadb
       - redis
     links:
       - mariadb
-    ports:
-      - "${NC_PORT}:80"
     volumes:
       - nc-data:/var/www/html
-    container_name: "${NC_NAME}"
+    container_name: "nextcloud"
+    restart: always
+
+  onlyoffice:
+    image: onlyoffice/documentserver:${OFFICE_VERSION}
+    environment:
+      - TZ=Asia/Taipei
+    volumes:
+      - onlyoffice-data:/var/www/onlyoffice/Data
+    container_name: "onlyoffice"
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - nextcloud
+    ports:
+      - ${NC_PORT}:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - nc-data:/var/www/html
+    container_name: nginx-server
     restart: always
 
   mariadb:
@@ -47,25 +64,13 @@ services:
 
   redis:
     image: redis:${RD_VERSION}
-    container_name: "${RD_NAME}"
     command: "redis-server --requirepass ${RD_PASS}"
     deploy:
       resources:
         limits:
           memory: 200M
+    container_name: "${RD_NAME}"
     restart: always
-
-  # onlyoffice:
-  #   build:
-  #     context: "./onlyoffice/"
-  #     args:
-  #       OFFICE_VERSION: ${OFFICE_VERSION}
-  #   container_name: "${OFFICE_NAME}"
-  #   environment:
-  #     - TZ=Asia/Taipei
-  #   volumes:
-  #     - onlyoffice-data:/var/www/onlyoffice/Data
-  #   restart: always
 
 volumes:
   db-data:

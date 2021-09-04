@@ -1,8 +1,0 @@
-ARG OFFICE_VERSION
-FROM onlyoffice/documentserver:${OFFICE_VERSION}
-
-RUN mkdir -p /var/www/onlyoffice/Data/certs
-# RUN openssl genrsa -out onlyoffice.key 2048 \
-#     && openssl req -new -key onlyoffice.key -out onlyoffice.csr \
-#     && openssl x509 -req -days 3650 -in onlyoffice.csr -signkey onlyoffice.key -out onlyoffice.crt \
-#     && openssl dhparam -out dhparam.pem 2048
