@@ -24,7 +24,7 @@ services:
         ports:
             - "${NC_PORT}:80"
         volumes:
-            - nc-data:/var/www/html/data
+            - nc-data:/var/www/html/
         container_name: "${NC_NAME}"
         restart: always
 
