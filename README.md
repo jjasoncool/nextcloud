@@ -8,3 +8,9 @@ docker-compose up -d
 ```
 
 - Please create data path folders before setup.
+- windows use virtualbox's sharefolder don't preinstall apps because of permission.
+
+e.g. 
+- windows(D:\nextcloud) => vm linux(/data/nextcloud) => docker(/var/www/html)
+- windows(X) => vm linux(/data/mariadb) => docker(/var/lib/mysql)
+
