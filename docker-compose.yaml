@@ -34,6 +34,27 @@ services:
     container_name: "onlyoffice"
     restart: always
 
+  # drawio:
+  #   image: jgraph/drawio
+  #   container_name: drawio
+  #   restart: always
+  #   ports:
+  #     - "8081:8080"
+  #     - "8443:8443"
+  #   environment:
+  #     PUBLIC_DNS: drawio
+  #     ORGANISATION_UNIT: IT
+  #     ORGANISATION: SK
+  #     CITY: kaohsiung
+  #     STATE: Taiwan
+  #     COUNTRY_CODE: Taiwan
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -f http://drawio:8080 || exit 1"]
+  #     interval: 1m30s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 10s
+
   nginx:
     image: nginx:latest
     depends_on:
