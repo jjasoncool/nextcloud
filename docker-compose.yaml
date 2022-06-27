@@ -6,6 +6,7 @@ services:
             context: "./nextcloud/"
             args:
                 NC_VERSION: ${NC_VERSION}
+                GID: ${GID}
         user: "${UID}:${GID}"
         environment:
             - TZ=Asia/Taipei
