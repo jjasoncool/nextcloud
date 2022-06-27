@@ -5,6 +5,8 @@
 ```
 cp ./.env.template ./.env
 docker-compose up -d
+docker exec -it -u root nextcloud bash
+usermod -aG root www-data
 ```
 
 - Please create data path folders before setup.
