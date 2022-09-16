@@ -29,6 +29,7 @@ services:
     image: onlyoffice/documentserver:${OFFICE_VERSION}
     environment:
       - TZ=Asia/Taipei
+      - JWT_ENABLED=false
     volumes:
       - onlyoffice-data:/var/www/onlyoffice/Data
     container_name: "onlyoffice"
