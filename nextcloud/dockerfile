@@ -12,7 +12,7 @@ RUN apt-get install -y cron --no-install-recommends
 # |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
 # |  |  |  |  |
 # *  *  *  *  * user-name command to be executed
-RUN echo '*/5 * * * * root /cron.sh >> /var/log/cron.log 2>&1' >> /etc/cron.d/cronjob
+RUN echo '@reboot root /cron.sh >> /var/log/cron.log 2>&1' >> /etc/cron.d/cronjob
 RUN chmod +x /etc/cron.d/cronjob
 RUN touch /var/log/cron.log
 
