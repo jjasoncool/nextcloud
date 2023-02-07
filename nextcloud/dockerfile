@@ -2,6 +2,7 @@ ARG NC_VERSION
 FROM nextcloud:${NC_VERSION}
 
 RUN apt-get update && apt-get install -y --no-install-recommends $(apt-cache search libmagickcore-6.q[0-9][0-9]-[0-9]-extra | cut -d " " -f1)
+RUN apt-get install -y supervisor && mkdir /var/log/supervisord /var/run/supervisord
 
 # # cron 設定定期自動更新
 # # .---------------- minute (0 - 59)
@@ -11,7 +12,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends $(apt-cache sea
 # # |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
 # # |  |  |  |  |
 # # *  *  *  *  * user-name command to be executed
+# 已包含在 cron.sh 執行的內容內
 # RUN echo '*/10 * * * * ./occ preview:pre-generate' >> /var/spool/cron/crontabs/www-data
 
-RUN touch /var/log/cron.log
-CMD /cron.sh >> /var/log/cron.log 2>&1 & php-fpm
+# RUN touch /var/log/cron.log
+# CMD /cron.sh >> /var/log/cron.log 2>&1 & php-fpm
+
+# 官方方法 supervisord 管理
+COPY supervisord.conf /supervisord.conf
+CMD ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
