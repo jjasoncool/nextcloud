@@ -27,7 +27,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4096M
+          memory: 8192M
 
   onlyoffice:
     image: onlyoffice/documentserver:${OFFICE_VERSION}
