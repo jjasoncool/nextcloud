@@ -38,6 +38,10 @@ services:
       - onlyoffice-data:/var/www/onlyoffice/Data
     container_name: "onlyoffice"
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1536M
 
   # drawio:
   #   image: jgraph/drawio
@@ -71,6 +75,10 @@ services:
       - nc-data:/var/www/html
     container_name: nginx-server
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   mariadb:
     image: mariadb:${DB_VERSION}
@@ -87,16 +95,20 @@ services:
       - db-data:/var/lib/mysql
     container_name: "${DB_NAME}"
     restart: always
-
-  redis:
-    image: redis:${RD_VERSION}
-    command: "redis-server --requirepass ${RD_PASS}"
     deploy:
       resources:
         limits:
           memory: 512M
+
+  redis:
+    image: redis:${RD_VERSION}
+    command: "redis-server --requirepass ${RD_PASS}"
     container_name: "${RD_NAME}"
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
 volumes:
   db-data:
