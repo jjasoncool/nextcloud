@@ -2,7 +2,7 @@ ARG NC_VERSION
 FROM nextcloud:${NC_VERSION}
 
 RUN apt-get update && apt-get install -y --no-install-recommends $(apt-cache search libmagickcore-6.q[0-9][0-9]-[0-9]-extra | cut -d " " -f1)
-RUN apt-get install -y supervisor && mkdir /var/log/supervisord /var/run/supervisord
+RUN apt-get install -y supervisor ffmpeg && mkdir /var/log/supervisord /var/run/supervisord
 
 # # cron 設定定期自動更新
 # # .---------------- minute (0 - 59)
