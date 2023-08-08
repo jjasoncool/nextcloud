@@ -30,7 +30,9 @@ services:
           memory: 8192M
 
   onlyoffice:
-    image: onlyoffice/documentserver:${OFFICE_VERSION}
+    # image: onlyoffice/documentserver:${OFFICE_VERSION}
+    # docker pull thomisus/onlyoffice-documentserver-unlimited:7.3.3
+    image: thomisus/onlyoffice-documentserver-unlimited:7.3.3
     environment:
       - TZ=Asia/Taipei
       - JWT_ENABLED=false
