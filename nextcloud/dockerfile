@@ -3,6 +3,7 @@ FROM nextcloud:${NC_VERSION}
 
 RUN apt-get update && apt-get install -y --no-install-recommends $(apt-cache search libmagickcore-6.q[0-9][0-9]-[0-9]-extra | cut -d " " -f1)
 RUN apt-get install -y supervisor ffmpeg && mkdir /var/log/supervisord /var/run/supervisord
+RUN sed -i "s|opcache.memory_consumption=128|opcache.memory_consumption=512|g;" /usr/local/etc/php/conf.d/opcache-recommended.ini
 RUN sed -i "s|opcache.jit_buffer_size=128M|opcache.jit_buffer_size=256M|g;" /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # # cron 設定定期自動更新
