@@ -30,12 +30,15 @@ services:
           memory: 8192M
 
   onlyoffice:
-    image: onlyoffice/documentserver:${OFFICE_VERSION}
+    # image: onlyoffice/documentserver:${OFFICE_VERSION}
     # docker pull thomisus/onlyoffice-documentserver-unlimited:7.3.3
-    # image: thomisus/onlyoffice-documentserver-unlimited:7.3.3
+    image: thomisus/onlyoffice-documentserver-unlimited:7.5.1
     environment:
       - TZ=Asia/Taipei
-      - JWT_ENABLED=false
+      - JWT_ENABLED=true
+      - JWT_SECRET=${OFFICE_PASS}
+      # After 7.3.3 version
+      - ALLOW_PRIVATE_IP_ADDRESS=true
     volumes:
       - onlyoffice-data:/var/www/onlyoffice/Data
     container_name: "onlyoffice"
@@ -45,26 +48,38 @@ services:
         limits:
           memory: 1536M
 
-  # drawio:
-  #   image: jgraph/drawio
-  #   container_name: drawio
-  #   restart: always
-  #   ports:
-  #     - "8081:8080"
-  #     - "8443:8443"
-  #   environment:
-  #     PUBLIC_DNS: drawio
-  #     ORGANISATION_UNIT: IT
-  #     ORGANISATION: SK
-  #     CITY: kaohsiung
-  #     STATE: Taiwan
-  #     COUNTRY_CODE: Taiwan
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "curl -f http://drawio:8080 || exit 1"]
-  #     interval: 1m30s
-  #     timeout: 10s
-  #     retries: 5
-  #     start_period: 10s
+  image-export:
+    image: jgraph/export-server
+    container_name: nextcloud-drawio-export
+    expose:
+      - "8000"
+    volumes:
+      - ./drawio/fonts:/usr/share/fonts/drawio
+    restart: always
+
+  drawio:
+    image: jgraph/drawio
+    container_name: drawio
+    restart: always
+    environment:
+      VIRTUAL_HOST: drawio.YOUR-DOMAIN
+      VIRTUAL_PORT: 8080
+      EXPORT_URL: http://image-export:8000/
+      PUBLIC_DNS: drawio
+      ORGANISATION_UNIT: IT
+      ORGANISATION: SK
+      CITY: kaohsiung
+      STATE: Taiwan
+      COUNTRY_CODE: Taiwan
+    depends_on:
+      - nginx
+      - image-export
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://drawio:8080 || exit 1"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 
   nginx:
     image: nginx:latest
