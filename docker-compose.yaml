@@ -49,7 +49,7 @@ services:
           memory: 1536M
 
   image-export:
-    image: jgraph/export-server
+    image: jgraph/export-server:latest
     container_name: drawio-export
     expose:
       - "8000"
@@ -58,11 +58,12 @@ services:
     restart: always
 
   drawio:
-    image: jgraph/drawio
+    image: jgraph/drawio:${DWIO_VERSION}
     container_name: drawio
     restart: always
     environment:
-      DRAWIO_BASE_URL: https://${HOST_DOMAIN}/drawio/
+      DRAWIO_BASE_URL: ${HOST_DOMAIN}
+      DRAWIO_SERVER_URL: https://${HOST_DOMAIN}/drawio/
       EXPORT_URL: http://drawio-export:8000/
       PUBLIC_DNS: drawio
       ORGANISATION_UNIT: IT
