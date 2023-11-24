@@ -50,7 +50,7 @@ services:
 
   image-export:
     image: jgraph/export-server
-    container_name: nextcloud-drawio-export
+    container_name: drawio-export
     expose:
       - "8000"
     volumes:
@@ -62,9 +62,8 @@ services:
     container_name: drawio
     restart: always
     environment:
-      VIRTUAL_HOST: drawio.YOUR-DOMAIN
-      VIRTUAL_PORT: 8080
-      EXPORT_URL: http://image-export:8000/
+      DRAWIO_BASE_URL: https://${HOST_DOMAIN}/drawio/
+      EXPORT_URL: http://drawio-export:8000/
       PUBLIC_DNS: drawio
       ORGANISATION_UNIT: IT
       ORGANISATION: SK
