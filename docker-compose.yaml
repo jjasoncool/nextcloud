@@ -48,23 +48,15 @@ services:
         limits:
           memory: 1536M
 
-  image-export:
-    image: jgraph/export-server:latest
-    container_name: drawio-export
-    expose:
-      - "8000"
-    volumes:
-      - ./drawio/fonts:/usr/share/fonts/drawio
-    restart: always
-
   drawio:
     image: jgraph/drawio:${DWIO_VERSION}
     container_name: drawio
     restart: always
     environment:
-      DRAWIO_BASE_URL: ${HOST_DOMAIN}
-      DRAWIO_SERVER_URL: https://${HOST_DOMAIN}/drawio/
-      EXPORT_URL: http://drawio-export:8000/
+      DRAWIO_BASE_URL: https://${HOST_DOMAIN}/drawio/
+      DRAWIO_LIGHTBOX_URL: https://${HOST_DOMAIN}/
+      # 沒有設定就是用官方的export server
+      # EXPORT_URL: https://${HOST_DOMAIN}/drawio-export/
       PUBLIC_DNS: drawio
       ORGANISATION_UNIT: IT
       ORGANISATION: SK
@@ -73,13 +65,24 @@ services:
       COUNTRY_CODE: Taiwan
     depends_on:
       - nginx
-      - image-export
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://drawio:8080 || exit 1"]
       interval: 1m30s
       timeout: 10s
       retries: 5
       start_period: 10s
+
+  # image-export:
+  #   image: jgraph/export-server:latest
+  #   container_name: drawio-export
+  #   expose:
+  #     - "8000"
+  #   environment:
+  #     DRAWIO_BASE_URL: ${HOST_DOMAIN}
+  #     DRAWIO_SERVER_URL: https://${HOST_DOMAIN}/drawio/
+  #   volumes:
+  #     - ./drawio/fonts:/usr/share/fonts/drawio
+  #   restart: always
 
   nginx:
     image: nginx:latest
