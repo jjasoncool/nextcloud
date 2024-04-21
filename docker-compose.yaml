@@ -31,8 +31,8 @@ services:
 
   onlyoffice:
     # image: onlyoffice/documentserver:${OFFICE_VERSION}
-    # docker pull thomisus/onlyoffice-documentserver-unlimited:7.3.3
-    image: thomisus/onlyoffice-documentserver-unlimited:7.5.1
+    # docker pull thomisus/onlyoffice-documentserver-unlimited:7.5.1
+    image: thomisus/onlyoffice-documentserver-unlimited:${OFFICE_VERSION}
     environment:
       - TZ=Asia/Taipei
       - JWT_ENABLED=true
