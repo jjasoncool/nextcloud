@@ -101,7 +101,7 @@ services:
 
   mariadb:
     image: mariadb:${DB_VERSION}
-    command: --transaction-isolation=READ-COMMITTED --log-bin --binlog-format=ROW --innodb-read-only-compressed=OFF
+    command: --transaction-isolation=READ-COMMITTED --log-bin=mysqld-bin --binlog-format=ROW --innodb-read-only-compressed=OFF
     environment:
       - TZ=Asia/Taipei
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
