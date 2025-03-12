@@ -46,7 +46,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1536M
+          memory: 2048M
 
   drawio:
     image: jgraph/drawio:${DWIO_VERSION}
