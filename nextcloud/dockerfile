@@ -12,4 +12,13 @@ RUN touch /usr/local/etc/php/conf.d/redis-session.ini
 RUN chmod 777 /usr/local/etc/php/conf.d/redis-session.ini
 
 RUN apt-get update && apt-get install -y --no-install-recommends $(apt-cache search libmagickcore-6.q[0-9][0-9]-[0-9]-extra | cut -d " " -f1)
+
+# 更新 apache 版本 HSTS 問題
+RUN if ! grep -q "Strict-Transport-Security" /etc/apache2/sites-available/000-default.conf; then \
+sed -i '/<\/VirtualHost>/i \
+\    <IfModule mod_headers.c>\n\
+\        Header always set Strict-Transport-Security "max-age=15552000; includeSubDomains"\n\
+\    </IfModule>' /etc/apache2/sites-available/000-default.conf; \
+fi
+
 USER www-data
