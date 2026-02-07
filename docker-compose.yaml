@@ -25,7 +25,8 @@ services:
         ports:
             - "${NC_PORT}:80"
         volumes:
-            - nc-data:/var/www/html/
+            - nc-code:/var/www/html/
+            - nc-data:/var/www/html/data
         container_name: "${NC_NAME}"
         restart: always
 
@@ -64,7 +65,7 @@ volumes:
             o: "bind"
             device: "${DB_DATAPATH}"
         external: false
-
+    nc-code:
     nc-data:
         driver: local
         driver_opts:
