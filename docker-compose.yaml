@@ -17,8 +17,10 @@ services:
       - NEXTCLOUD_UPDATE=1
       - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT}
     depends_on:
-      - mariadb
-      - redis
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_started
     volumes:
       - nc-data:/var/www/html
     container_name: "nextcloud"
@@ -107,12 +109,19 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
       - MYSQL_DATABASE=${DB_DATABASE}
-    ports:
+      - MARIADB_AUTO_UPGRADE=1
+    expose:
       - "${DB_PORT}"
     volumes:
       - db-data:/var/lib/mysql
     container_name: "${DB_NAME}"
     restart: always
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     deploy:
       resources:
         limits:
