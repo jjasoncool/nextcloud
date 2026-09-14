@@ -54,7 +54,7 @@ services:
     container_name: drawio
     restart: always
     environment:
-      - DRAWIO_BASE_URL=https://${HOST_DOMAIN}
+      - DRAWIO_BASE_URL=https://${HOST_DOMAIN}/drawio
       - DRAWIO_SERVER_URL=https://${HOST_DOMAIN}/drawio/
       # 沒有設定就是用官方的export server
       # - EXPORT_URL=http://image-export:8000/
